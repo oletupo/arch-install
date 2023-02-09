@@ -17,7 +17,7 @@ function run {
 #xrandr --output LVDS1 --mode 1366x768 --output DP3 --mode 1920x1080 --right-of LVDS1
 #xrandr --output HDMI2 --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output VIRTUAL1 --off
 # vertical monitor setup
-xrandr --output DP-1 --rotate right
+#xrandr --output DP-1 --rotate right
 
 #change your keyboard if you need it
 setxkbmap -layout es
@@ -32,7 +32,7 @@ run nm-applet &
 #run xfce4-power-manager &
 numlockx on &
 #blueberry-tray &
-picom --config $HOME/.config/qtile/scripts/picom.conf &
+#picom --config $HOME/.config/qtile/scripts/picom.conf &
 #/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 #/usr/lib/xfce4/notifyd/xfce4-notifyd &
 
