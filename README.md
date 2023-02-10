@@ -1,16 +1,17 @@
 # vm-archinstall
 
 ## ARCHINSTALL
+
 uefi
 ext4
 systemdboot
 minimal
 multilib
 extra pkg: git, vim
----
+
 
 ## qtile.sh
-* pacman
+* pacman:
 xorg
 xf86-video-intel # xf86-video-fbdev
 qtile
@@ -28,11 +29,11 @@ arc-gtk-theme
 networkmanager
 network-manager-applet
 
-* services
+* services:
 lightdm
 NetworkManager
 
-* config files
+* config files:
 qtile
 alacritty 
 rofi
@@ -40,5 +41,5 @@ geany
 thunar
 
 
-* todo
+* todo:
 reflector service
