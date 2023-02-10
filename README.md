@@ -2,12 +2,12 @@
 
 ## ARCHINSTALL
 
-*uefi
-*ext4
-*systemdboot
-*minimal
-*multilib
-*extra pkg: git, vim
+* uefi
+* ext4
+* systemdboot
+* minimal
+* multilib
+* extra pkg: git, vim
 
 
 ## qtile.sh
