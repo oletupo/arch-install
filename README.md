@@ -1,3 +1,27 @@
+# archinstall
+
+## qtile.sh
+* pacman:
+xorg
+xf86-video-intel
+qtile
+picom
+lightdm
+lightdm-gtk-greeter
+lxappearance
+nitrogen
+thunar
+firefox
+xfce4-terminal
+alacritty
+rofi
+arc-gtk-theme
+networkmanager
+network-manager-applet
+ttf-jetbrains-mono
+
+____
+
 # vm-archinstall
 
 ## ARCHINSTALL
@@ -13,7 +37,7 @@
 ## qtile.sh
 * pacman:
 xorg
-xf86-video-intel # xf86-video-fbdev
+xf86-video-fbdev
 qtile
 picom
 lightdm
