@@ -53,6 +53,8 @@ arc-gtk-theme
 networkmanager
 network-manager-applet
 ttf-jetbrains-mono
+xdg-user-dirs
+udiskie
 
 * services:
 lightdm

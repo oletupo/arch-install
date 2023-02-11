@@ -29,4 +29,4 @@ picom --config $HOME/.config/picom/picom.conf &
 
 # Starting user applications at boot time
 nitrogen --restore &
-
+udiskie -2 &
