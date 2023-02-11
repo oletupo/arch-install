@@ -45,6 +45,7 @@ lightdm-gtk-greeter
 lxappearance
 nitrogen
 thunar
+thunar-volman
 firefox
 xfce4-terminal
 alacritty
@@ -55,6 +56,8 @@ network-manager-applet
 ttf-jetbrains-mono
 xdg-user-dirs
 udiskie
+pacman-contrib
+
 
 * services:
 lightdm

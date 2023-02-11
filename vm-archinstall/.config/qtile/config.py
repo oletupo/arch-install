@@ -257,7 +257,7 @@ wdg_menu = widget.TextBox(
 	padding = 0,
 	mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn('rofi -show drun')}
 	)
-""" wdg_updates = widget.GenPollText(
+wdg_updates = widget.GenPollText(
 	padding = 2,
 	fontsize = 14,
 	foreground = current_theme[5],
@@ -265,7 +265,7 @@ wdg_menu = widget.TextBox(
 	update_interval= 900,
 	func=lambda: subprocess.check_output(os.path.expanduser("~/.config/qtile/scripts/packages.sh")).decode().strip(),
 	mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(myTerm + ' --hold -e checkupdates')}
-	) """
+	) 
 wdg_clock = widget.Clock(
 	fontsize = 14,
 	foreground = current_theme[5],
@@ -407,7 +407,7 @@ def init_widgets_screen1():
 			padding = 0
 			),
 		dec_angleopen,
-		#wdg_updates,
+		wdg_updates,
 		dec_angleclose,
 		widget.GroupBox(
 			font = "Noto Sans Bold",
