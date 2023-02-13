@@ -57,6 +57,7 @@ ttf-jetbrains-mono
 xdg-user-dirs
 udiskie
 pacman-contrib
+polkit
 
 
 * services:
