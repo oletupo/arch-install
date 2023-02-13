@@ -13,6 +13,8 @@ git clone https://aur.archlinux.org/paru.git
 cd paru/
 makepkg -si --noconfirm
 
+paru -S --noconfirm ttf-noto-nerd
+
 /bin/echo -e "\e[1;32mREBOOTING IN 5..4..3..2..1..\e[0m"
 sleep 5
 sudo reboot
