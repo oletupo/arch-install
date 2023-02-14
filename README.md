@@ -70,7 +70,3 @@ alacritty
 rofi
 geany
 thunar
-
-
-* todo:
-reflector service

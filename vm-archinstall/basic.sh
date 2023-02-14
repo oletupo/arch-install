@@ -5,6 +5,7 @@ sudo reflector -c Spain -a 12 --sort rate --save /etc/pacman.d/mirrorlist
 
 sudo systemctl enable lightdm
 sudo systemctl enable NetworkManager
+sudo systemctl enable reflector.service
 
 cp -Rf .config ~/
 xdg-user-dirs-update

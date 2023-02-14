@@ -18,8 +18,8 @@ mod2 = "control"
 # PATHS
 home = os.path.expanduser('~')
 myTerm = "alacritty"
-rofi_file_find = 'rofi  -show find -modi find:~/.local/share/rofi/file-finder -width 1600'
-rofi_power_menu = 'rofi  -show menu -modi "menu:~/.local/share/rofi/power-menu --choices=suspend/shutdown/reboot" -config "~/.config/rofi/themes/Pmenu.rasi"'
+rofi_file_find = 'rofi  -show find -modi find:~/.config/rofi/scripts/file-finder -width 1600'
+rofi_power_menu = 'rofi  -show menu -modi "menu:~/.config/rofi/scripts/power-menu --choices=suspend/shutdown/reboot" -config "~/.config/rofi/themes/Pmenu.rasi"'
 
 @lazy.function
 def window_to_prev_group(qtile):
