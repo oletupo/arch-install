@@ -1,6 +1,6 @@
 # archinstall
 
-## qtile.sh
+## basic.sh
 * pacman:
 xorg
 xf86-video-intel
@@ -34,7 +34,7 @@ ____
 * extra pkg: git, vim
 
 
-## qtile.sh
+## basic.sh
 * pacman:
 xorg
 xf86-video-fbdev
