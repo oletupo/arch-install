@@ -433,12 +433,6 @@ def init_widgets_screen1():
 		dec_angleopen,
 		wdg_clock,
 		dec_angleclose,
-		widget.CurrentLayoutIcon(
-			foreground = current_theme[5],
-			background = current_theme[0],
-			scale = 0.6,
-			padding = 0
-			),
 		widget.TaskList(
 			max_title_width = 0,
 			icon_size = None,
