@@ -2,8 +2,9 @@ import os
 import re
 import socket
 import subprocess
+import json
 from libqtile import qtile
-from libqtile.config import Drag, Key, Screen, Group, Drag, Click, Rule, KeyChord, Match
+from libqtile.config import Drag, Key, Screen, Group, Drag, Click, Rule, KeyChord, Match, DropDown, ScratchPad
 from libqtile.command import lazy
 from libqtile import layout, bar, widget, hook
 from libqtile.widget import Spacer
@@ -19,7 +20,8 @@ mod2 = "control"
 home = os.path.expanduser('~')
 myTerm = "alacritty"
 rofi_file_find = 'rofi  -show find -modi find:~/.config/rofi/scripts/file-finder -width 1600'
-rofi_power_menu = 'rofi  -show menu -modi "menu:~/.config/rofi/scripts/power-menu --choices=suspend/shutdown/reboot" -config "~/.config/rofi/themes/Pmenu.rasi"'
+rofi_power_menu = 'rofi  -show menu -modi "menu:~/.config/rofi/scripts/power-menu --choices=logout/suspend/shutdown/reboot" -config "~/.config/rofi/themes/Pmenu.rasi" --no-symbols'
+notes_app = '~/Applications/Joplin-2.7.13.AppImage'
 
 @lazy.function
 def window_to_prev_group(qtile):
@@ -38,10 +40,10 @@ keys = [
 	# SUPER + KEYS
     Key([mod], "q", lazy.window.kill()),
     Key([mod], "w", lazy.window.toggle_floating()),
-    Key([mod], "e", lazy.next_layout()), 
+    Key([mod], "e", lazy.spawn(rofi_file_find)), 
     Key([mod], "r", lazy.layout.flip()), # flip layout for monadrall/monadwide
     Key([mod], "a", lazy.spawn(myTerm + ' -e ranger')), 
-    Key([mod], "s", lazy.spawn(rofi_file_find)),
+    Key([mod], "s", lazy.spawn()),
     Key([mod], "d", lazy.spawn('rofi -show drun')),
     Key([mod], "f", lazy.window.toggle_fullscreen()),
 	Key([mod], "period", lazy.next_screen()), 
@@ -53,15 +55,15 @@ keys = [
     Key([mod], "KP_Subtract", lazy.spawn(rofi_power_menu)), # KP -
     Key([mod], "KP_Add", lazy.spawn('pavucontrol')), # KP +
 	# SUPER + SHIFT + KEYS
-    Key([mod, "shift"], "q", lazy.spawn('galculator')),
+    Key([mod, "shift"], "q", lazy.spawn('qalculate-gtk')),
     Key([mod, "shift"], "w", lazy.spawn('geany')),
     Key([mod, "shift"], "e", lazy.spawn('pycharm')),
     Key([mod, "shift"], "a", lazy.spawn('firefox')),
     Key([mod, "shift"], "s", lazy.spawn('./.local/bin/internet-search')), # No es un rofi modi es un script que usa rofi
     Key([mod, "shift"], "d", lazy.spawn('chromium -no-default-browser-check')),
-	Key([mod, "shift"], "z", lazy.spawn('')),	# virt-man
-    Key([mod, "shift"], "x", lazy.spawn('')),
-    Key([mod, "shift"], "c", lazy.spawn('')),  # Steam
+	Key([mod, "shift"], "z", lazy.spawn(myTerm)),	
+    Key([mod, "shift"], "x", lazy.spawn(myTerm)),
+    Key([mod, "shift"], "c", lazy.spawn(myTerm)), 
     Key([mod, "shift"], "Return", lazy.spawn('Thunar')),
 	# SUPER + CTRL KEYS (File association programs)
     #Key([mod, "control"], "s", lazy.spawn('libreoffice')),
@@ -174,7 +176,7 @@ keys = [
 groups = []
 group_names = ["1", "2", "3", "4", "5", "6",]
 group_labels = ["1 ", "2 ", "3 ", "4 ", "5 ", "6 ",]
-group_layouts = ["ratiotile", "monadtall", "monadtall", "monadtall", "monadtall", "ratiotile",]
+group_layouts = ["ratiotile", "ratiotile", "ratiotile", "ratiotile", "ratiotile", "ratiotile",]
 
 for i in range(len(group_names)):
     groups.append(
@@ -184,14 +186,15 @@ for i in range(len(group_names)):
             label=group_labels[i],
         ))
 
+
 for i in groups:
     keys.extend([
 
 # CHANGE GROUPS
         Key([mod], i.name, lazy.group[i.name].toscreen()),
-        Key([mod], "Tab", lazy.spawn("rofi -show window")),
-        Key(["mod1"], "Tab", lazy.screen.next_group()),
-        Key(["mod1", "shift"], "Tab", lazy.screen.prev_group()),
+        Key([mod], "Tab", lazy.next_layout()),
+        Key(["mod1"], "Tab", lazy.spawn("rofi -show window")),
+        #Key(["mod1", "shift"], "Tab", lazy.screen.prev_group()),
 
 # MOVE WINDOW TO SELECTED WORKSPACE AND STAY ON WORKSPACE
         Key([mod, "shift"], i.name, lazy.window.togroup(i.name)),
@@ -200,25 +203,32 @@ for i in groups:
         #Key([mod, "shift"], i.name, lazy.window.togroup(i.name) , lazy.group[i.name].toscreen()),
     ])
 
+# SCRATCHPADS
+#groups.append(ScratchPad("0",[DropDown("notes", 'alacritty -o "window.opacity=1" -e "joplin"', x=0.05, y=0.02, width=0.9, height=0.95, on_focus_lost_hide=True)]))
+groups.append(ScratchPad("0",[DropDown("notes", 'xfce4-terminal -e "joplin"', x=0.05, y=0.02, width=0.9, height=0.95, on_focus_lost_hide=True)]))
+keys.append(Key([mod], 's', lazy.group['0'].dropdown_toggle('notes')))
+
 # COLOR PALETTE
 def init_theme():
-    return [["#2f343f", "#2f343f"], # 0: Dark Grey // Grey[2]
-			["#383c4a", "#383c4a"], # 1
-			["#404552", "#404552"], # 2
-			["#4b5162", "#4b5162"], # 3
-			["#7c818c", "#7c818c"], # 4
-			["#f3f4f5", "#f3f4f5"], # 5: Light Grey
-			["#5294e2", "#5294e2"], # 6: Blue
-			["#fba922", "#fba922"], # 7: Orange
-			["#62ff00", "#62ff00"], # 8: Green
-			["#a9a9a9", "#a9a9a9"]] # 9: Disabled Text Color (Grey)
+	theme_name = 'theme03'
+	config_file = home + '/.config/qtile/themes/' + theme_name + '.json'
+	if os.path.isfile(config_file):
+		with open(config_file) as f:
+			dict_theme = json.load(f)
+		return [key for key in dict_theme.values()]
+	else:
+		# fallback to /themes/default.json
+		with open(home + '/.config/qtile/themes/default.json') as f:
+			dict_theme = json.load(f)
+		return [key for key in dict_theme.values()]
+	
 
 current_theme = init_theme()
 
 def init_layout_theme():
     return {
-		"margin":4,
-		"border_width":2,
+		"margin":8,
+		"border_width":3,
 		#"border_focus": "#5294e2", #"#acb9ca",
 		"border_focus": current_theme[6], #"#5294e2", #"#acb9ca",
 		"border_normal": current_theme[9] # "#4c566a"
@@ -265,7 +275,7 @@ wdg_updates = widget.GenPollText(
 	update_interval= 900,
 	func=lambda: subprocess.check_output(os.path.expanduser("~/.config/qtile/scripts/packages.sh")).decode().strip(),
 	mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(myTerm + ' --hold -e checkupdates')}
-	) 
+	)
 wdg_clock = widget.Clock(
 	fontsize = 14,
 	foreground = current_theme[5],
@@ -282,7 +292,7 @@ wdg_miniclock = widget.Clock(
 	format = "%Y/%m/%d [%H:%M]",
 	mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(myTerm + ' --hold -e cal -3m')}
 	)
-""" wdg_cpuload = widget.CPU(
+wdg_cpuload = widget.CPU(
 	format = 'CPU: {load_percent}%',
 	foreground = current_theme[5],
 	background = current_theme[2],
@@ -336,8 +346,9 @@ wdg_df = widget.DF(
 	format='/~ {uf}Gb ({r: .0f}%)',
 	update_interval=300,
 	mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(myTerm + ' --hold -e df -h')}
-	) """
+	)
 wdg_volicon = widget.TextBox(
+	foreground = current_theme[5],
 	fontsize = 16,
 	text = "",
 	mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn('pavucontrol')}
@@ -356,14 +367,14 @@ dec_sep = widget.Sep(
 	)
 dec_fsep = widget.Sep(
 	linewidth = 0,
-	padding = 100,
+	padding = 120,
 	background = current_theme[0],
 	)	
 dec_angleopen = widget.TextBox(
 	fontsize = 32,
 	foreground = current_theme[2],
 	background = current_theme[0],
-	text = "", 
+	text = "",
 	padding = 0
 	)
 dec_angleclose = widget.TextBox(
@@ -436,19 +447,23 @@ def init_widgets_screen1():
 		widget.TaskList(
 			max_title_width = 0,
 			icon_size = None,
+			center_aligned = True,
+			# max_chars = 1,
 			),
-		dec_cubeopen,
-		#wdg_cpuload,
-		#wdg_cputemp,
+		dec_angleopen,
+		# dec_cubeopen,
+		wdg_cpuload,
+		wdg_cputemp,
 		dec_vert,
-		#wdg_ram,
+		wdg_ram,
 		dec_vert,
-		#wdg_gpu,
+		wdg_gpu,
 		dec_vert,
-		#wdg_df,
+		wdg_df,
 		dec_vert,
-		#wdg_net,
-		dec_cubeclose,
+		wdg_net,
+		# dec_cubeclose,
+		dec_angleclose,
 		dec_sep,
 		wdg_volicon,
 		wdg_volprct,
@@ -462,7 +477,7 @@ def init_widgets_screen1():
     return widgets_screen1
 
 # SCREEN 2  BAR COMPOSITION
-""" def init_widgets_screen2():
+def init_widgets_screen2():
     widgets_screen2 = [	
 		widget.CurrentLayoutIcon(
 			foreground = current_theme[5],
@@ -507,18 +522,19 @@ def init_widgets_screen1():
 		wdg_gpu,
 		dec_vert,
 		wdg_net,
-		dec_angleclose,	
+		dec_angleclose,
+		dec_fsep,
 		wdg_volicon,
 		wdg_volprct,
 		dec_fsep,
 		]
-    return widgets_screen2 """
+    return widgets_screen2
 
 # SCREEN INITIALIZATION
 def init_screens():
     return [
 	Screen(top=bar.Bar(widgets=init_widgets_screen1(), size=26)),
-	#Screen(top=bar.Bar(widgets=init_widgets_screen2(), size=26, opacity=1, margin=[0,0,0,0])),  # opacity default 1, margin [N,E,S,W]
+	Screen(top=bar.Bar(widgets=init_widgets_screen2(), size=26, opacity=1, margin=[0,0,0,0])),  # opacity default 1, margin [N,E,S,W]
 	]
            
 screens = init_screens()
@@ -554,7 +570,9 @@ floating_types = ["notification", "toolbar", "splash", "dialog"]
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
+# use xprop to get wm_class
 floating_layout = layout.Floating(float_rules=[
+	Match(wm_class = 'qalculate-gtk'),
     Match(wm_class = 'Galculator'),
     Match(wm_class = 'xfce4-terminal'),
     Match(wm_class = 'pavucontrol'),
